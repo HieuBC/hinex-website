@@ -551,7 +551,7 @@ body.locked{overflow:hidden}
     <p class="ssub rv">Bốn nhóm sản phẩm do đội ngũ <span class="bn">HiNex</span> thiết kế và dùng trực tiếp trong lớp học.</p>
     <div class="cards">
       <article class="card rv"><div class="img"><img src="assets/renders/link.png?v=5" alt="" loading="lazy"></div><div class="body"><h3>Kit học tập</h3><p>Cấp 1 lego từ tính <span class="bn">HiNex</span> Link V1, cấp 2 module rời gắn trên lego, cấp 3 module rời với ESP32-S3 N16R8.</p><div class="acts"><button class="btn-line" data-open="m-link" type="button">Ghép thử →</button><a class="btn-line" href="#kit">Cấp độ →</a></div></div></article>
-      <article class="card rv"><div class="img"><img src="assets/renders/car.png" alt="" loading="lazy"></div><div class="body"><h3>Robot di động</h3><p>Dò line, né vật cản bằng siêu âm hoặc LiDAR, camera AI nhận diện vật thể. Lắp từ servo, vỏ in 3D và lego.</p><div class="acts"><button class="btn-line" data-open="m-car" type="button">Mô phỏng →</button></div></div></article>
+      <article class="card rv"><div class="img"><img src="assets/renders/car.png" alt="" loading="lazy"></div><div class="body"><h3>Robot di động</h3><p>Dò line, né vật cản bằng LiDAR quét 360° hoặc siêu âm HC-SR04, camera AI nhận diện vật thể. Lắp từ servo, vỏ in 3D và lego.</p><div class="acts"><button class="btn-line" data-open="m-car" type="button">Mô phỏng →</button></div></div></article>
       <article class="card rv"><div class="img"><img src="assets/renders/drone-frame.png" alt="" loading="lazy"></div><div class="body"><h3>Sản phẩm 3D</h3><p>Khung drone lồng bảo vệ, vỏ tay cầm, vỏ servo, vỏ bánh xe, bộ cân bằng. Thiết kế riêng, in được ngay.</p><div class="acts"><button class="btn-line" data-3d="6" type="button">Xem 3D →</button><a class="btn-line" href="#du-an" data-filter="3d">Tất cả →</a></div></div></article>
       <article class="card rv"><div class="img dark"><img src="assets/pcb/controller-evo_top.svg" alt="" loading="lazy"></div><div class="body"><h3>Mạch tự thiết kế</h3><p>Mạch drone, mạch kit ESP32-S3, mạch Yolo:Bit, mạch tay cầm. Từ sơ đồ nguyên lý đến file sản xuất.</p><div class="acts"><a class="btn-line" href="#bo-mach">Xem mạch →</a></div></div></article>
     </div>
@@ -832,7 +832,7 @@ body.locked{overflow:hidden}
     <div class="csim-view" id="csim">
       <div class="ph">Đang tải linh kiện…</div>
       <div class="chud" id="chud">
-        <div class="modes" id="cModes" role="group" aria-label="Chế độ robot"><button data-m="line" aria-pressed="true" type="button">Dò line</button><button data-m="avoid" aria-pressed="false" type="button">Né vật cản</button><button data-m="cam" aria-pressed="false" type="button">Camera AI</button></div>
+        <div class="modes" id="cModes" role="group" aria-label="Chế độ robot"><button data-m="line" aria-pressed="true" type="button">Dò line</button><button data-m="lidar" aria-pressed="false" type="button">LiDAR</button><button data-m="sonar" aria-pressed="false" type="button">Siêu âm</button><button data-m="cam" aria-pressed="false" type="button">Camera AI</button></div>
         <div class="sens" id="cSense"></div>
         <div class="mot"><span>Motor trái</span><span class="bar"><i id="mL"></i></span><span id="mLv">0%</span><span>Motor phải</span><span class="bar"><i id="mR"></i></span><span id="mRv">0%</span></div>
         <div class="code" id="code"></div>
@@ -1240,6 +1240,6 @@ document.getElementById('signup').addEventListener('submit', e => {
 })();
 
 </script>
-<script type="module" src="assets/hx3d.js?v=5"></script>
+<script type="module" src="assets/hx3d.js?v=6"></script>
 </body>
 </html>

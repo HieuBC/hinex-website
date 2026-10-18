@@ -380,12 +380,14 @@ const STEP_CAP = [
 ];
 const MODE_CAP = {
   line: 'Dò line: hai mắt hồng ngoại nhìn vạch đen, bộ não quyết định rẽ trái, rẽ phải hay đi thẳng.',
-  avoid: 'Né vật cản: LiDAR quét 360°, thấy vật phía trước gần hơn 16 cm thì quay sang phía trống hơn.',
+  lidar: 'LiDAR quét 360°, mỗi vòng 72 tia. Thấy vật phía trước gần hơn 16 cm thì quay về hướng trống xa nhất.',
+  sonar: 'Siêu âm HC-SR04 phát một chùm hẹp khoảng ±15° phía trước, chỉ đo được khoảng cách phía trước. Gặp vật thì quay tại chỗ tới khi trống.',
   cam: 'Camera AI: nhận diện vật thể trong khung hình, thấy quả bóng thì lái tới, chưa thấy thì xoay tìm.'
 };
 const MODE_CODE = {
   line: ['lặp mãi:', '  nếu trái thấy line → rẽ trái', '  nếu phải thấy line → rẽ phải', '  còn lại → đi thẳng'],
-  avoid: ['lặp mãi:', '  d = LiDAR.khoảng_cách(phía trước)', '  nếu d < 16 cm → quay sang phía trống', '  còn lại → đi thẳng'],
+  lidar: ['lặp mãi:', '  quét = LiDAR.quét_360()', '  nếu phía trước < 16 cm → quay về hướng trống nhất', '  còn lại → đi thẳng'],
+  sonar: ['lặp mãi:', '  d = HC_SR04.đo()   # 2–400 cm', '  nếu d < 16 cm → quay trái tới khi trống', '  còn lại → đi thẳng'],
   cam: ['lặp mãi:', '  vật = AI.nhận_diện(camera)', '  nếu thấy "quả bóng" → lái tới', '  còn lại → xoay tìm']
 };
 const SEQ = { 1: [['servo', 0], ['lid', 1.1]], 2: [['wheel', 0]], 3: [['plate', 0], ['brain', .9], ['sensor', 1.7], ['caster', 2.3]] };
@@ -436,6 +438,16 @@ async function initCarSim(modal) {
   BOXES.forEach(b => OBJ.push({ m: b.m, name: 'Khối lego' }));
   const BALL_SPOTS = [[300, 300], [-250, -320], [520, -40], [-560, 40], [140, 120], [-200, 360]];
   let ballSpot = 0;
+  const sonar = new THREE.Group(); sonar.position.set(0, 21, -68); body.add(sonar);
+  sonar.add(new THREE.Mesh(new THREE.BoxGeometry(45, 20, 1.6), std('#1f4fa8')));
+  [-13, 13].forEach(x => { const c = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 12, 28), std('#c7c9cf', { metalness: .8, roughness: .3 })); c.rotation.x = Math.PI / 2; c.position.set(x, 0, -6.8); sonar.add(c);
+    const m = new THREE.Mesh(new THREE.CircleGeometry(6.8, 28), std('#2a2a2a', { roughness: 1 })); m.position.set(x, 0, -12.9); m.rotation.y = Math.PI; sonar.add(m); });
+  const sonarLeg = new THREE.Mesh(new THREE.BoxGeometry(16, 10, 8), plastic('#1A9FE0')); sonarLeg.position.set(0, -14, 2); sonar.add(sonarLeg);
+  const NR = 72;
+  const lidarRays = new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(NR * 6), 3)), new THREE.LineBasicMaterial({ color: '#ff3b30', transparent: true, opacity: .35 }));
+  lidarRays.visible = false; scene.add(lidarRays);
+  const sonarCone = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 32, 1, true), new THREE.MeshBasicMaterial({ color: '#1A9FE0', transparent: true, opacity: .25, side: THREE.DoubleSide, depthWrite: false }));
+  sonarCone.visible = false; scene.add(sonarCone);
   const lidarPts = new THREE.Points(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(72 * 3), 3)), new THREE.PointsMaterial({ color: '#ff3b30', size: 9 }));
   lidarPts.visible = false; scene.add(lidarPts);
   const rayLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: '#ff3b30' }));
@@ -453,7 +465,8 @@ async function initCarSim(modal) {
     document.querySelectorAll('#cModes button').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === m));
     codeEl.innerHTML = MODE_CODE[m].map((l, i) => `<span data-r="${i}"${i ? '' : ' class="kw"'}>${l}</span>`).join('');
     senseEl.innerHTML = m === 'line' ? '<span><i class="sdot" id="sL"></i>Trái</span><span><i class="sdot" id="sR"></i>Phải</span>'
-      : m === 'avoid' ? '<span>Phía trước <b id="sD">--</b></span><span>Trái <b id="sDl">--</b></span><span>Phải <b id="sDr">--</b></span>'
+      : m === 'lidar' ? '<span>Phía trước <b id="sD">--</b></span><span>Trái <b id="sDl">--</b></span><span>Phải <b id="sDr">--</b></span><span>Hướng trống <b id="sBest">--</b></span>'
+      : m === 'sonar' ? '<span>Khoảng cách <b id="sD">--</b></span><span>Chùm tia <b>±15°</b></span><span>Tầm đo <b>2–400 cm</b></span>'
       : '<span>Thấy: <b id="sObj">--</b></span><span>Đã tìm <b id="sFound">0</b></span>';
     if (step === 4) { capEl.textContent = MODE_CAP[m]; applyScene(); resetRun(); }
   }
@@ -461,8 +474,8 @@ async function initCarSim(modal) {
   function applyScene() {
     const on4 = step === 4;
     track.mesh.visible = on4 && mode === 'line'; arena.visible = on4 && mode !== 'line'; floor.visible = !on4;
-    lidar.visible = mode === 'avoid' || !on4; camMod.visible = mode === 'cam' || !on4;
-    lidarPts.visible = on4 && mode === 'avoid'; rayLine.visible = on4 && mode === 'avoid';
+    lidar.visible = mode === 'lidar' || !on4; camMod.visible = mode === 'cam' || !on4; sonar.visible = on4 && mode === 'sonar';
+    lidarPts.visible = lidarRays.visible = on4 && mode === 'lidar'; rayLine.visible = false; sonarCone.visible = on4 && mode === 'sonar';
     ball.visible = cone.visible = duck.visible = mode === 'cam';
     boxesEl.innerHTML = '';
   }
@@ -485,7 +498,7 @@ async function initCarSim(modal) {
   const speedEl = document.getElementById('cSpeed'), followEl = document.getElementById('cFollow');
   function placeBall() { const [x, z] = BALL_SPOTS[ballSpot++ % BALL_SPOTS.length]; ball.position.set(x, 30, z); }
   function resetRun() {
-    run.vl = run.vr = 0; run.turn = 0;
+    run.vl = run.vr = 0; run.turn = 0; run.best = undefined;
     if (mode === 'line') { const p = track.curve.getPointAt(0), t = track.curve.getTangentAt(0); run.x = p.x; run.z = p.z; run.th = Math.atan2(-t.x, -t.z); }
     else { run.x = -600; run.z = -20; run.th = -Math.PI / 2; if (mode === 'cam') placeBall(); }
   }
@@ -533,14 +546,23 @@ async function initCarSim(modal) {
           else if (R && !L) { run.vl = base; run.vr = base * .1; run.rule = 2; }
           else { run.vl = run.vr = base; run.rule = 3; }
           run.L = L; run.R = R;
-        } else if (mode === 'avoid') {
+        } else if (mode === 'lidar') {
+          // LiDAR: biết khoảng cách mọi hướng, chọn hướng trống xa nhất rồi quay về hướng đó
           dFront = Math.min(ray(0), ray(.25), ray(-.25)) - 70;
           if (run.turn) {
-            run.vl = -run.turn * base * .55; run.vr = run.turn * base * .55; run.rule = 2;
-            if (dFront > 260) run.turn = 0;
+            const err = Math.atan2(Math.sin(run.goal - run.th), Math.cos(run.goal - run.th));
+            run.turn = err >= 0 ? 1 : -1; run.vl = -run.turn * base * .55; run.vr = run.turn * base * .55; run.rule = 2;
+            if (Math.abs(err) < .08 && dFront > 200) run.turn = 0;
           } else if (dFront < 160) {
-            dL = ray(.9); dR = ray(-.9); run.turn = dL >= dR ? 1 : -1; run.rule = 2;
+            let best = 0, bd = -1; for (let i = 1; i < 36; i++) { const a = i / 36 * Math.PI * 2 - (i > 18 ? Math.PI * 2 : 0), dd = ray(a, 900); if (dd > bd) { bd = dd; best = a; } }
+            run.goal = run.th + best; run.best = best; run.turn = best >= 0 ? 1 : -1; run.rule = 2;
           } else { run.vl = run.vr = base; run.rule = 3; }
+        } else if (mode === 'sonar') {
+          // HC-SR04: chỉ đo được một chùm hẹp phía trước
+          dFront = Math.min(ray(0), ray(.13), ray(-.13), ray(.26), ray(-.26)) - 70;
+          if (run.turn) { run.vl = -base * .5; run.vr = base * .5; run.rule = 2; if (dFront > 260) run.turn = 0; }
+          else if (dFront < 160) { run.turn = 1; run.rule = 2; }
+          else { run.vl = run.vr = base; run.rule = 3; }
         } else {
           // camera: góc nhìn ±35°, tầm nhìn 900 mm
           const fx = -Math.sin(run.th), fz = -Math.cos(run.th);
@@ -560,14 +582,22 @@ async function initCarSim(modal) {
       if (Math.abs(run.x) > lim.w / 2 || Math.abs(run.z) > lim.h / 2) resetRun();
       car.position.set(run.x, 0, run.z); car.rotation.set(0, run.th, 0);
       irDots[0].material.color.set(mode === 'line' && run.L ? '#ff3b30' : '#5a1a16'); irDots[1].material.color.set(mode === 'line' && run.R ? '#ff3b30' : '#5a1a16');
-      if (mode === 'avoid') {
+      if (mode === 'lidar') {
         lidHead.rotation.y += dt * 12; lidT += dt;
         if (lidT > .1) {
-          lidT = 0; const arr = lidarPts.geometry.attributes.position.array, [ox, oz] = local(0, -18);
-          for (let i = 0; i < 72; i++) { const a = i / 72 * Math.PI * 2, d = ray(a, 700), g = run.th + a; arr[i * 3] = ox - Math.sin(g) * d; arr[i * 3 + 1] = 45; arr[i * 3 + 2] = oz - Math.cos(g) * d; }
-          lidarPts.geometry.attributes.position.needsUpdate = true;
-          const df = ray(0, 700); rayLine.geometry.setFromPoints([new THREE.Vector3(ox, 45, oz), new THREE.Vector3(ox - Math.sin(run.th) * df, 45, oz - Math.cos(run.th) * df)]);
+          lidT = 0; const arr = lidarPts.geometry.attributes.position.array, ra = lidarRays.geometry.attributes.position.array, [ox, oz] = local(0, -18);
+          for (let i = 0; i < NR; i++) {
+            const a = i / NR * Math.PI * 2, d = ray(a, 700), g = run.th + a, hx = ox - Math.sin(g) * d, hz = oz - Math.cos(g) * d;
+            arr[i * 3] = hx; arr[i * 3 + 1] = 45; arr[i * 3 + 2] = hz;
+            ra.set([ox, 45, oz, hx, 45, hz], i * 6);
+          }
+          lidarPts.geometry.attributes.position.needsUpdate = true; lidarRays.geometry.attributes.position.needsUpdate = true;
         }
+      }
+      if (mode === 'sonar') {
+        const [ox, oz] = local(0, -81), d = Math.max(20, Math.min(ray(0), ray(.13), ray(-.13), ray(.26), ray(-.26)) - 81), r = Math.tan(.26) * d;
+        sonarCone.scale.set(r, d, r); sonarCone.position.set(ox - Math.sin(run.th) * d / 2, 25, oz - Math.cos(run.th) * d / 2);
+        sonarCone.rotation.set(Math.PI / 2, run.th, 0, 'YXZ');
       }
       if (followEl.checked && !camTween) {
         const fx = -Math.sin(run.th), fz = -Math.cos(run.th), back = mode === 'line' ? 260 : 420;
@@ -581,7 +611,8 @@ async function initCarSim(modal) {
         mL.style.width = Math.abs(pl) + '%'; mR.style.width = Math.abs(pr) + '%'; mLv.textContent = pl + '%'; mRv.textContent = pr + '%';
         codeEl.querySelectorAll('[data-r]').forEach(c => c.classList.toggle('hit', +c.dataset.r === run.rule));
         if (mode === 'line') { document.getElementById('sL')?.classList.toggle('on', !!run.L); document.getElementById('sR')?.classList.toggle('on', !!run.R); }
-        if (mode === 'avoid') { const f = Math.max(0, ray(0, 900) - 70); document.getElementById('sD').textContent = (f / 10).toFixed(0) + ' cm'; document.getElementById('sDl').textContent = (Math.max(0, ray(1.57, 900) - 42) / 10).toFixed(0) + ' cm'; document.getElementById('sDr').textContent = (Math.max(0, ray(-1.57, 900) - 42) / 10).toFixed(0) + ' cm'; }
+        if (mode === 'lidar') { const f = Math.max(0, ray(0, 900) - 70); document.getElementById('sD').textContent = (f / 10).toFixed(0) + ' cm'; document.getElementById('sDl').textContent = (Math.max(0, ray(1.57, 900) - 42) / 10).toFixed(0) + ' cm'; document.getElementById('sDr').textContent = (Math.max(0, ray(-1.57, 900) - 42) / 10).toFixed(0) + ' cm'; document.getElementById('sBest').textContent = run.best === undefined ? '--' : Math.round(run.best * 180 / Math.PI) + '°'; }
+        if (mode === 'sonar') { const f = Math.max(0, Math.min(ray(0, 900), ray(.13, 900), ray(-.13, 900), ray(.26, 900), ray(-.26, 900)) - 81); document.getElementById('sD').textContent = (f / 10).toFixed(0) + ' cm'; }
         if (mode === 'cam') {
           // khung nhận diện: vật nằm trong góc nhìn ±35° và tầm 900 mm của camera trên xe
           const fx = -Math.sin(run.th), fz = -Math.cos(run.th), W = el.clientWidth, H = el.clientHeight;
