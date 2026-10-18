@@ -553,7 +553,7 @@ body.locked{overflow:hidden}
       <article class="card rv"><div class="img"><img src="assets/renders/link.png?v=5" alt="" loading="lazy"></div><div class="body"><h3>Kit học tập</h3><p>Cấp 1 lego từ tính <span class="bn">HiNex</span> Link V1, cấp 2 module rời gắn trên lego, cấp 3 module rời với ESP32-S3 N16R8.</p><div class="acts"><button class="btn-line" data-open="m-link" type="button">Ghép thử →</button><a class="btn-line" href="#kit">Cấp độ →</a></div></div></article>
       <article class="card rv"><div class="img"><img src="assets/renders/car.png" alt="" loading="lazy"></div><div class="body"><h3>Robot di động</h3><p>Dò line, né vật cản bằng LiDAR quét 360° hoặc siêu âm HC-SR04, camera AI nhận diện vật thể. Lắp từ servo, vỏ in 3D và lego.</p><div class="acts"><button class="btn-line" data-open="m-car" type="button">Mô phỏng →</button></div></div></article>
       <article class="card rv"><div class="img"><img src="assets/renders/drone-frame.png" alt="" loading="lazy"></div><div class="body"><h3>Sản phẩm 3D</h3><p>Khung drone lồng bảo vệ, vỏ tay cầm, vỏ servo, vỏ bánh xe, bộ cân bằng. Thiết kế riêng, in được ngay.</p><div class="acts"><button class="btn-line" data-3d="6" type="button">Xem 3D →</button><a class="btn-line" href="#du-an" data-filter="3d">Tất cả →</a></div></div></article>
-      <article class="card rv"><div class="img dark"><img src="assets/pcb/controller-evo_top.svg" alt="" loading="lazy"></div><div class="body"><h3>Mạch tự thiết kế</h3><p>Mạch drone, mạch kit ESP32-S3, mạch HiNex Bit, mạch tay cầm. Từ sơ đồ nguyên lý đến file sản xuất.</p><div class="acts"><a class="btn-line" href="#bo-mach">Xem mạch →</a></div></div></article>
+      <article class="card rv"><div class="img dark"><img src="assets/pcb/controller-evo_top.svg" alt="" loading="lazy"></div><div class="body"><h3>Mạch tự thiết kế</h3><p>Mạch drone, mạch kit ESP32-S3, mạch Yolo:Bit, mạch tay cầm. Từ sơ đồ nguyên lý đến file sản xuất.</p><div class="acts"><a class="btn-line" href="#bo-mach">Xem mạch →</a></div></div></article>
     </div>
   </div>
 </section>
@@ -667,14 +667,13 @@ body.locked{overflow:hidden}
       <button aria-pressed="true" data-board="dragonfly">HiNex Drone V1</button>
       <button aria-pressed="false" data-board="controller-evo">Tay cầm</button>
       <button aria-pressed="false" data-board="drone-tiny">Drone-tiny</button>
-      <button aria-pressed="false" data-board="hinex-bit">HiNex Bit</button>
     </div></div>
     <div class="pcb-stage rv"><img id="pcbImg" src="assets/pcb/dragonfly_bottom.svg?v=2" alt="Bo mạch HiNex Drone V1, mặt dưới"></div>
     <div class="seg-row"><div class="seg" role="group" aria-label="Chọn mặt bo">
       <button aria-pressed="false" data-side="top">Mặt trên</button>
       <button aria-pressed="true" data-side="bottom">Mặt dưới</button>
     </div></div>
-    <p class="center" id="pcbNote" style="margin-top:18px;font-size:13px;color:#7f93ad">Hình dựng trực tiếp từ file Gerber sản xuất.</p>
+    <p class="center" style="margin-top:18px;font-size:13px;color:#7f93ad">Hình dựng trực tiếp từ file Gerber sản xuất.</p>
   </div>
 </section>
 
@@ -697,7 +696,7 @@ body.locked{overflow:hidden}
       <button class="gi rv" data-cat="pcb" data-board-open="controller-evo" type="button"><span class="img dark"><img src="assets/pcb/controller-evo_top.svg" alt="" loading="lazy"></span><span class="cap">Mạch tay cầm<small>ESP32-C3 · hai joystick · Type-C</small></span></button>
       <button class="gi rv" data-cat="pcb" data-board-open="drone-tiny" type="button"><span class="img dark"><img src="assets/pcb/drone-tiny_top.svg" alt="" loading="lazy"></span><span class="cap">Mạch Drone-tiny<small>Khung chữ X 79 mm · 4 MOSFET</small></span></button>
       <a class="gi rv" data-cat="pcb kit" href="#kit"><span class="img dark"><span class="chip-art"><span>ESP32-S3</span></span></span><span class="cap">Mạch kit S3 v2<small>Bộ não của <span class="bn">HiNex</span> Link V1 · thiết kế Altium</small></span></a>
-      <button class="gi rv" data-cat="pcb kit" data-board-open="hinex-bit" type="button"><span class="img dark"><img src="assets/pcb/hinex-bit_top.svg?v=2" alt="" loading="lazy"></span><span class="cap"><span class="bn">HiNex</span> Bit V1<small>Ma trận 25 LED RGB · nút A/B · ESP32-S3 N16R8</small></span></button>
+      <a class="gi rv" data-cat="pcb" href="#lien-he"><span class="img dark"><span class="chip-art yb"><span>Yolo:Bit</span></span></span><span class="cap">Mạch Yolo:Bit<small>Hình đang cập nhật</small></span></a>
     </div>
   </div>
 </section>
@@ -717,7 +716,7 @@ body.locked{overflow:hidden}
 <!-- ===== TECH ===== -->
 <section aria-label="Công nghệ sử dụng">
   <div class="techbar">Công nghệ sử dụng</div>
-  <div class="techs"><span>ESP32-S3</span><span>ESP32-C3</span><span>ESP-NOW</span><span>MicroPython</span><span>Arduino</span><span>Altium Designer</span><span>In 3D PETG</span><span>HiNex Bit</span></div>
+  <div class="techs"><span>ESP32-S3</span><span>ESP32-C3</span><span>ESP-NOW</span><span>MicroPython</span><span>Arduino</span><span>Altium Designer</span><span>In 3D PETG</span><span>Yolo:Bit</span></div>
 </section>
 
 <!-- ===== SIGNUP ===== -->
@@ -1034,7 +1033,7 @@ document.querySelectorAll('[data-3d]').forEach(b => b.addEventListener('click', 
 }));
 
 /* PCB switcher */
-const BOARD_NAMES = { 'dragonfly': 'HiNex Drone V1', 'controller-evo': 'tay cầm', 'drone-tiny': 'Drone-tiny', 'hinex-bit': 'HiNex Bit V1' };
+const BOARD_NAMES = { 'dragonfly': 'HiNex Drone V1', 'controller-evo': 'tay cầm', 'drone-tiny': 'Drone-tiny' };
 let board = 'dragonfly', side = 'bottom';
 const pcbImg = document.getElementById('pcbImg');
 function renderPcb() {
@@ -1043,7 +1042,6 @@ function renderPcb() {
     pcbImg.src = `assets/pcb/${board}_${side}.svg?v=2`;
     pcbImg.alt = `Bo mạch ${BOARD_NAMES[board]}, ${side === 'top' ? 'mặt trên' : 'mặt dưới'}`;
     pcbImg.onload = () => pcbImg.classList.remove('out');
-    document.getElementById('pcbNote').textContent = board === 'hinex-bit' ? 'Bản vẽ thiết kế HiNex Bit V1 · 52 × 43 mm · cắm được vào cạnh nối như board micro:bit.' : 'Hình dựng trực tiếp từ file Gerber sản xuất.';
   }, 200);
   document.querySelectorAll('[data-board]').forEach(x => x.setAttribute('aria-pressed', x.dataset.board === board));
   document.querySelectorAll('[data-side]').forEach(x => x.setAttribute('aria-pressed', x.dataset.side === side));
