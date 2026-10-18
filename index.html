@@ -552,8 +552,8 @@ body.locked{overflow:hidden}
     <div class="cards">
       <article class="card rv"><div class="img"><img src="assets/renders/link.png?v=5" alt="" loading="lazy"></div><div class="body"><h3>Kit học tập</h3><p>Cấp 1 lego từ tính <span class="bn">HiNex</span> Link V1, cấp 2 module rời gắn trên lego, cấp 3 module rời với ESP32-S3 N16R8.</p><div class="acts"><button class="btn-line" data-open="m-link" type="button">Ghép thử →</button><a class="btn-line" href="#kit">Cấp độ →</a></div></div></article>
       <article class="card rv"><div class="img"><img src="assets/renders/car.png" alt="" loading="lazy"></div><div class="body"><h3>Robot di động</h3><p>Dò line, né vật cản bằng LiDAR quét 360° hoặc siêu âm HC-SR04, camera AI nhận diện vật thể. Lắp từ servo, vỏ in 3D và lego.</p><div class="acts"><button class="btn-line" data-open="m-car" type="button">Mô phỏng →</button></div></div></article>
-      <article class="card rv"><div class="img"><img src="assets/renders/drone-frame.png" alt="" loading="lazy"></div><div class="body"><h3>Sản phẩm 3D</h3><p>Khung drone lồng bảo vệ, vỏ tay cầm, vỏ servo, vỏ bánh xe, bộ cân bằng. Thiết kế riêng, in được ngay.</p><div class="acts"><button class="btn-line" data-3d="6" type="button">Xem 3D →</button><a class="btn-line" href="#du-an" data-filter="3d">Tất cả →</a></div></div></article>
-      <article class="card rv"><div class="img dark"><img src="assets/pcb/controller-evo_top.svg" alt="" loading="lazy"></div><div class="body"><h3>Mạch tự thiết kế</h3><p>Mạch drone, mạch kit ESP32-S3, mạch Yolo:Bit, mạch tay cầm. Từ sơ đồ nguyên lý đến file sản xuất.</p><div class="acts"><a class="btn-line" href="#bo-mach">Xem mạch →</a></div></div></article>
+      <article class="card rv"><div class="img"><img src="assets/renders/drone-frame.png" alt="" loading="lazy"></div><div class="body"><h3>Sản phẩm 3D</h3><p>Khung drone lồng bảo vệ, vỏ tay cầm, vỏ Yolo:Bit, vỏ servo, vỏ bánh xe, bộ cân bằng. Thiết kế riêng, in được ngay.</p><div class="acts"><button class="btn-line" data-3d="6" type="button">Xem 3D →</button><a class="btn-line" href="#du-an" data-filter="3d">Tất cả →</a></div></div></article>
+      <article class="card rv"><div class="img dark"><img src="assets/pcb/controller-evo_top.svg" alt="" loading="lazy"></div><div class="body"><h3>Mạch tự thiết kế</h3><p>Mạch drone, mạch kit ESP32-S3, mạch tay cầm. Từ sơ đồ nguyên lý đến file sản xuất.</p><div class="acts"><a class="btn-line" href="#bo-mach">Xem mạch →</a></div></div></article>
     </div>
   </div>
 </section>
@@ -696,7 +696,7 @@ body.locked{overflow:hidden}
       <button class="gi rv" data-cat="pcb" data-board-open="controller-evo" type="button"><span class="img dark"><img src="assets/pcb/controller-evo_top.svg" alt="" loading="lazy"></span><span class="cap">Mạch tay cầm<small>ESP32-C3 · hai joystick · Type-C</small></span></button>
       <button class="gi rv" data-cat="pcb" data-board-open="drone-tiny" type="button"><span class="img dark"><img src="assets/pcb/drone-tiny_top.svg" alt="" loading="lazy"></span><span class="cap">Mạch Drone-tiny<small>Khung chữ X 79 mm · 4 MOSFET</small></span></button>
       <a class="gi rv" data-cat="pcb kit" href="#kit"><span class="img dark"><span class="chip-art"><span>ESP32-S3</span></span></span><span class="cap">Mạch kit S3 v2<small>Bộ não của <span class="bn">HiNex</span> Link V1 · thiết kế Altium</small></span></a>
-      <a class="gi rv" data-cat="pcb" href="#lien-he"><span class="img dark"><span class="chip-art yb"><span>Yolo:Bit</span></span></span><span class="cap">Mạch Yolo:Bit<small>Hình đang cập nhật</small></span></a>
+      <button class="gi rv" data-cat="3d kit" data-3d="10" type="button"><span class="img"><span class="tag">Xem 3D</span><img src="assets/renders/yolobit-case-closed.png" alt="" loading="lazy"></span><span class="cap">Vỏ <span class="bn">HiNex</span> cho Yolo:Bit<small>Mới · nắp + đáy · cửa sổ LED, lỗ nút A/B, chừa dải chân cắm</small></span></button>
     </div>
   </div>
 </section>
@@ -860,7 +860,7 @@ body.locked{overflow:hidden}
     <div class="viewer m3d-view" id="v-m3d" data-mode="cycle" aria-label="Mô hình 3D chi tiết in 3D"><div class="ph">Đang tải mô hình 3D…</div></div>
     <div class="tabs">
       <button aria-pressed="true" data-i="0">Vỏ servo</button><button aria-pressed="false" data-i="1">Nắp servo</button><button aria-pressed="false" data-i="2">Vỏ bánh xe</button>
-      <button aria-pressed="false" data-i="3">Khớp chữ thập</button><button aria-pressed="false" data-i="4">Vòng cân bằng</button><button aria-pressed="false" data-i="5">Đế cân bằng</button><button aria-pressed="false" data-i="6">Khung trên drone</button><button aria-pressed="false" data-i="7">Khung dưới drone</button><button aria-pressed="false" data-i="8">Vỏ tay cầm · nắp</button><button aria-pressed="false" data-i="9">Vỏ tay cầm · đáy</button>
+      <button aria-pressed="false" data-i="3">Khớp chữ thập</button><button aria-pressed="false" data-i="4">Vòng cân bằng</button><button aria-pressed="false" data-i="5">Đế cân bằng</button><button aria-pressed="false" data-i="6">Khung trên drone</button><button aria-pressed="false" data-i="7">Khung dưới drone</button><button aria-pressed="false" data-i="8">Vỏ tay cầm · nắp</button><button aria-pressed="false" data-i="9">Vỏ tay cầm · đáy</button><button aria-pressed="false" data-i="10">Vỏ Yolo:Bit · nắp</button><button aria-pressed="false" data-i="11">Vỏ Yolo:Bit · đáy</button>
     </div>
   </div>
 </div>
@@ -1240,6 +1240,6 @@ document.getElementById('signup').addEventListener('submit', e => {
 })();
 
 </script>
-<script type="module" src="assets/hx3d.js?v=6"></script>
+<script type="module" src="assets/hx3d.js?v=7"></script>
 </body>
 </html>

@@ -59,7 +59,8 @@ const SCENES = {
     { src: BASE + 'models/lego-wheel.stl', color: '#0a72d6', rx: 0 }, { src: BASE + 'models/lego-cross.stl', color: '#34c759', rx: 0 },
     { src: BASE + 'models/gimbal-ring.stl', color: '#5e5ce6' }, { src: BASE + 'models/gimbal-base.stl', color: '#3a3a3c', rough: .6 },
     { src: BASE + 'models/drone-v1-b.stl', color: '#1A9FE0', rough: .45 }, { src: BASE + 'models/drone-v1-a.stl', color: '#eef0f3', rough: .55 },
-    { src: BASE + 'models/taycam-tren.stl', color: '#1A9FE0', rough: .45 }, { src: BASE + 'models/taycam-duoi.stl', color: '#2c2c2e', rough: .6 }
+    { src: BASE + 'models/taycam-tren.stl', color: '#1A9FE0', rough: .45 }, { src: BASE + 'models/taycam-duoi.stl', color: '#2c2c2e', rough: .6 },
+    { src: BASE + 'models/yolobit-tren.stl', color: '#1A9FE0', rough: .45 }, { src: BASE + 'models/yolobit-duoi.stl', color: '#2c2c2e', rough: .6 }
   ]
 };
 async function initViewer(el) {
